@@ -3,13 +3,13 @@ package com.example.backend.service;
 import com.example.backend.DTO.UserAccountDTO;
 import com.example.backend.DTO.request.LoginRequest;
 import com.example.backend.DTO.request.RefreshTokenRequest;
-import com.example.backend.DTO.respone.AuthRespone;
-import com.example.backend.DTO.respone.TokenRespone;
+import com.example.backend.DTO.response.AuthResponse;
+import com.example.backend.DTO.response.TokenResponse;
 
 public interface AuthService {
-    AuthRespone signIn(LoginRequest loginRequest);
-    AuthRespone signUp(UserAccountDTO userAccountDTO);
+    AuthResponse signIn(LoginRequest loginRequest);
+    AuthResponse signUp(UserAccountDTO userAccountDTO);
     String logOut(String jwt) throws Exception;
-    TokenRespone refreshToken(RefreshTokenRequest refreshTokenRequest);
+    TokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 
 }

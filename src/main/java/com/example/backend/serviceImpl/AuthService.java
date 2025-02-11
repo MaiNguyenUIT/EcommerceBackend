@@ -3,8 +3,8 @@ package com.example.backend.serviceImpl;
 import com.example.backend.DTO.UserAccountDTO;
 import com.example.backend.DTO.request.LoginRequest;
 import com.example.backend.DTO.request.RefreshTokenRequest;
-import com.example.backend.DTO.respone.AuthRespone;
-import com.example.backend.DTO.respone.TokenRespone;
+import com.example.backend.DTO.response.AuthResponse;
+import com.example.backend.DTO.response.TokenResponse;
 import com.example.backend.ENUM.USER_ROLE;
 import com.example.backend.config.JwtProvider;
 import com.example.backend.exception.BadRequestException;
@@ -47,7 +47,7 @@ public class AuthService implements com.example.backend.service.AuthService {
     @Autowired
     private TokenBlacklistService tokenBlacklistService;
     @Override
-    public AuthRespone signIn(LoginRequest loginRequest) {
+    public AuthResponse signIn(LoginRequest loginRequest) {
         String username = loginRequest.getEmail();
         String password = loginRequest.getPassword();
 
@@ -60,16 +60,16 @@ public class AuthService implements com.example.backend.service.AuthService {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user.getId());
         String jwt =  jwtProvider.generatedToken(authentication);
 
-        AuthRespone authRespone = new AuthRespone();
-        authRespone.setRefreshToken(refreshToken.getToken());
-        authRespone.setAccessToken(jwt);
-        authRespone.setRole(USER_ROLE.valueOf(role));
-        authRespone.setMessage("Sign in success");
-        return authRespone;
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setRefreshToken(refreshToken.getToken());
+        authResponse.setAccessToken(jwt);
+        authResponse.setRole(USER_ROLE.valueOf(role));
+        authResponse.setMessage("Sign in success");
+        return authResponse;
     }
 
     @Override
-    public AuthRespone signUp(UserAccountDTO userAccountDTO) {
+    public AuthResponse signUp(UserAccountDTO userAccountDTO) {
         User isUserNameExist = userRepository.findByemail(userAccountDTO.getEmail());
         if(isUserNameExist != null){
             throw new BadRequestException("Email is already used by another user");
@@ -88,12 +88,12 @@ public class AuthService implements com.example.backend.service.AuthService {
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser.getId());
         String jwt =  jwtProvider.generatedToken(authentication);
 
-        AuthRespone authRespone = new AuthRespone();
-        authRespone.setRole(savedUser.getRole());
-        authRespone.setMessage("Register success");
-        authRespone.setRefreshToken(refreshToken.getToken());
-        authRespone.setAccessToken(jwt);
-        return authRespone;
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setRole(savedUser.getRole());
+        authResponse.setMessage("Register success");
+        authResponse.setRefreshToken(refreshToken.getToken());
+        authResponse.setAccessToken(jwt);
+        return authResponse;
     }
 
     @Override
@@ -111,7 +111,7 @@ public class AuthService implements com.example.backend.service.AuthService {
     }
 
     @Override
-    public TokenRespone refreshToken(RefreshTokenRequest refreshTokenRequest) {
+    public TokenResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
         RefreshToken refreshToken = refreshTokenRepository.findBytoken(refreshTokenRequest.getToken())
                 .orElseThrow(() -> new BadRequestException("Refresh token isn't valid"));
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
@@ -119,11 +119,11 @@ public class AuthService implements com.example.backend.service.AuthService {
             throw new BadRequestException("Refresh token is expiry");
         }
         User user = userRepository.findById(refreshToken.getUserId()).orElseThrow();
-        TokenRespone tokenRespone = new TokenRespone();
+        TokenResponse tokenResponse = new TokenResponse();
         String accessToken = jwtProvider.generateAccessToken(user.getEmail(), user.getRole());
 //        tokenRespone.setRefreshToken(refreshToken.getToken());
-        tokenRespone.setAccessToken(accessToken);
-        return tokenRespone;
+        tokenResponse.setAccessToken(accessToken);
+        return tokenResponse;
     }
     private Authentication authenticate(String username, String password) {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);

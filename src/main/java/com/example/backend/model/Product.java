@@ -106,13 +106,13 @@ public class Product {
         this.image = image;
     }
 
-    public List<Rating> getRating() {
+    public List<String> getRating() {
         return rating;
     }
 
-    public void setRating(List<Rating> rating) {
+    public void setRating(List<String> rating) {
         this.rating = rating;
     }
 
-    private List<Rating> rating;
+    private List<String> rating;
 }

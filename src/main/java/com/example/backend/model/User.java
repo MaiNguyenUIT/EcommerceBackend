@@ -19,7 +19,7 @@ public class User {
     private String photo = "https://www.shutterstock.com/image-vector/default-avatar-profile-icon-social-600nw-1677509740.jpg";
     private USER_ROLE role = USER_ROLE.ROLE_CUSTOMER;
     private Address address;
-    private String cartId;
+
 
     public String getId() {
         return id;
@@ -84,15 +84,6 @@ public class User {
     public void setAddress(Address address) {
         this.address = address;
     }
-
-    public String getCartId() {
-        return cartId;
-    }
-
-    public void setCartId(String cartId) {
-        this.cartId = cartId;
-    }
-
     public String getWishListId() {
         return wishListId;
     }

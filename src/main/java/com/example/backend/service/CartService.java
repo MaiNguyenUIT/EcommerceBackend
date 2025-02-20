@@ -13,5 +13,6 @@ public interface CartService {
     Cart mergeGuestCartToUserCart(String sessionId, String userId); // Gộp giỏ hàng vãng lai vào tài khoản
     Cart increaseCartItem(String userId, String productId);
     Cart decreaseCartItem(String userId, String productId);
+    Cart updateCartInfor(Cart cart);
 }
 

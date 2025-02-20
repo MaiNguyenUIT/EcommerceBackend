@@ -12,7 +12,10 @@ import com.example.backend.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class GuestCartService implements com.example.backend.service.GuestCartService {
@@ -40,15 +43,7 @@ public class GuestCartService implements com.example.backend.service.GuestCartSe
                             existingItem -> existingItem.setQuantity(existingItem.getQuantity() + 1),
                             () -> guestCart.getCartItems().add(CartItemMapper.INSTANCE.toEntity(cartItemDTO))
                     );
-            int totalPrice = 0;
-            int totalItem = 0;
-            for(CartItem i : guestCart.getCartItems()){
-                totalItem += i.getQuantity();
-                totalPrice += productRepository.findById(i.getProductId()).get().getPrice()*i.getQuantity();
-            }
-            guestCart.setTotalItem(totalItem);
-            guestCart.setTotalPrice(totalPrice);
-            return guestCartRepository.save(guestCart);
+            return guestCartRepository.save(updateCartInfor(guestCart));
         }
     }
 
@@ -78,7 +73,7 @@ public class GuestCartService implements com.example.backend.service.GuestCartSe
             throw new NotFoundException("Product not found in cart");
         }
 
-        return guestCartRepository.save(cart); // Save and return the updated cart
+        return guestCartRepository.save(updateCartInfor(cart)); // Save and return the updated cart
     }
 
     @Override
@@ -88,7 +83,7 @@ public class GuestCartService implements com.example.backend.service.GuestCartSe
         // Find and remove the cart item by productId
         guestCart.getCartItems().removeIf(item -> item.getProductId().equals(productId));
         // Save the updated cart
-        return guestCartRepository.save(guestCart);
+        return guestCartRepository.save(updateCartInfor(guestCart));
     }
 
     @Override
@@ -112,7 +107,7 @@ public class GuestCartService implements com.example.backend.service.GuestCartSe
             throw new NotFoundException("Product not found in cart");
         }
 
-        return guestCartRepository.save(cart);
+        return guestCartRepository.save(updateCartInfor(cart));
     }
 
     @Override
@@ -137,6 +132,33 @@ public class GuestCartService implements com.example.backend.service.GuestCartSe
             throw new NotFoundException("Product not found in cart");
         }
 
-        return guestCartRepository.save(cart);
+        return guestCartRepository.save(updateCartInfor(cart));
+    }
+
+    @Override
+    public GuestCart updateCartInfor(GuestCart cart) {
+        List<String> productIds = cart.getCartItems().stream()
+                .map(CartItem::getProductId)
+                .collect(Collectors.toList());
+
+        // Truy vấn tất cả sản phẩm trong một lần
+        List<Product> products = productRepository.findAllById(productIds);
+
+        // Tạo Map để truy xuất giá nhanh
+        Map<String, Integer> productPriceMap = products.stream()
+                .collect(Collectors.toMap(Product::getId, Product::getPrice));
+
+        // Tính tổng số lượng và tổng giá trị
+        int totalPrice = 0;
+        int totalItem = 0;
+
+        for (CartItem i : cart.getCartItems()) {
+            totalItem += i.getQuantity();
+            totalPrice += productPriceMap.get(i.getProductId()) * i.getQuantity();
+        }
+
+        cart.setTotalItem(totalItem);
+        cart.setTotalPrice(totalPrice);
+        return cart;
     }
 }

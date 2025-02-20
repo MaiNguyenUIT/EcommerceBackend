@@ -2,19 +2,16 @@ package com.example.backend.model;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.redis.core.RedisHash;
 
-import java.time.LocalDateTime;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-@Document(
-        "wishlist"
-)
-public class WishList {
+@RedisHash(value = "GuestWishList", timeToLive = 86400)
+public class GuestWishList implements Serializable {
     @Id
-    private String id;
+    private String sessionId;
     private List<WishListItem> wishListItems = new ArrayList<>();
-    private String userId;
 }

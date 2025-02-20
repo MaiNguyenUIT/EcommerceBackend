@@ -12,7 +12,6 @@ import org.mapstruct.factory.Mappers;
 public interface CartItemMapper {
     CartItemMapper INSTANCE = Mappers.getMapper(CartItemMapper.class);
     @Mapping(target = "quantity", ignore = true)
-    @Mapping(target = "addedAt", ignore = true)
     CartItem toEntity(CartItemDTO dto);
 
     CartItemDTO toDTO(CartItem cartItem);

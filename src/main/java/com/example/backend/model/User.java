@@ -84,13 +84,4 @@ public class User {
     public void setAddress(Address address) {
         this.address = address;
     }
-    public String getWishListId() {
-        return wishListId;
-    }
-
-    public void setWishListId(String wishListId) {
-        this.wishListId = wishListId;
-    }
-
-    private String wishListId;
 }

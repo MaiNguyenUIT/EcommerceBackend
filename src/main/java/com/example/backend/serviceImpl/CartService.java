@@ -44,30 +44,7 @@ public class CartService implements com.example.backend.service.CartService {
                             () -> userCart.getCartItems().add(CartItemMapper.INSTANCE.toEntity(cartItemDTO))
                     );
 
-            List<String> productIds = userCart.getCartItems().stream()
-                    .map(CartItem::getProductId)
-                    .collect(Collectors.toList());
-
-            // Truy vấn tất cả sản phẩm trong một lần
-            List<Product> products = productRepository.findAllById(productIds);
-
-            // Tạo Map để truy xuất giá nhanh
-            Map<String, Integer> productPriceMap = products.stream()
-                    .collect(Collectors.toMap(Product::getId, Product::getPrice));
-
-            // Tính tổng số lượng và tổng giá trị
-            int totalPrice = 0;
-            int totalItem = 0;
-
-            for (CartItem i : userCart.getCartItems()) {
-                totalItem += i.getQuantity();
-                totalPrice += productPriceMap.get(i.getProductId()) * i.getQuantity();
-            }
-
-            userCart.setTotalItem(totalItem);
-            userCart.setTotalPrice(totalPrice);
-
-            return cartRepository.save(userCart);
+            return cartRepository.save(updateCartInfor(userCart));
         }
     }
     @Override
@@ -96,30 +73,7 @@ public class CartService implements com.example.backend.service.CartService {
             throw new NotFoundException("Product not found in cart");
         }
 
-        List<String> productIds = cart.getCartItems().stream()
-                .map(CartItem::getProductId)
-                .collect(Collectors.toList());
-
-        // Truy vấn tất cả sản phẩm trong một lần
-        List<Product> products = productRepository.findAllById(productIds);
-
-        // Tạo Map để truy xuất giá nhanh
-        Map<String, Integer> productPriceMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, Product::getPrice));
-
-        // Tính tổng số lượng và tổng giá trị
-        int totalPrice = 0;
-        int totalItem = 0;
-
-        for (CartItem i : cart.getCartItems()) {
-            totalItem += i.getQuantity();
-            totalPrice += productPriceMap.get(i.getProductId()) * i.getQuantity();
-        }
-
-        cart.setTotalItem(totalItem);
-        cart.setTotalPrice(totalPrice);
-
-        return cartRepository.save(cart);
+        return cartRepository.save(updateCartInfor(cart));
     }
 
     @Override
@@ -129,30 +83,7 @@ public class CartService implements com.example.backend.service.CartService {
         // Find and remove the cart item by productId
         cart.getCartItems().removeIf(item -> item.getProductName().equals(productId));
         // Save the updated cart
-        List<String> productIds = cart.getCartItems().stream()
-                .map(CartItem::getProductId)
-                .collect(Collectors.toList());
-
-        // Truy vấn tất cả sản phẩm trong một lần
-        List<Product> products = productRepository.findAllById(productIds);
-
-        // Tạo Map để truy xuất giá nhanh
-        Map<String, Integer> productPriceMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, Product::getPrice));
-
-        // Tính tổng số lượng và tổng giá trị
-        int totalPrice = 0;
-        int totalItem = 0;
-
-        for (CartItem i : cart.getCartItems()) {
-            totalItem += i.getQuantity();
-            totalPrice += productPriceMap.get(i.getProductId()) * i.getQuantity();
-        }
-
-        cart.setTotalItem(totalItem);
-        cart.setTotalPrice(totalPrice);
-
-        return cartRepository.save(cart);
+        return cartRepository.save(updateCartInfor(cart));
     }
 
     @Override
@@ -162,19 +93,35 @@ public class CartService implements com.example.backend.service.CartService {
 
     @Override
     public Cart mergeGuestCartToUserCart(String sessionId, String userId) {
+        // Lấy guestCart, nếu không có thì trả về userCart hiện tại
         GuestCart guestCart = guestCartRepository.findById(sessionId).orElse(null);
         Cart userCart = cartRepository.findByuserId(userId).orElse(new Cart());
+        userCart.setUserId(userId); // Đảm bảo set userId cho userCart
 
         if (guestCart != null) {
-            userCart.getCartItems().addAll(guestCart.getCartItems());
-            userCart.setUserId(userId);
-            userCart.setTotalPrice(guestCart.getTotalPrice());
-            userCart.setTotalItem(guestCart.getTotalItem());
+            // Merge từng CartItem từ guestCart vào userCart
+            for (CartItem guestItem : guestCart.getCartItems()) {
+                userCart.getCartItems().stream()
+                        .filter(userItem -> userItem.getProductId().equals(guestItem.getProductId()))
+                        .findFirst()
+                        .ifPresentOrElse(
+                                existingItem -> {
+                                    // Cập nhật số lượng cho mặt hàng đã tồn tại
+                                    existingItem.setQuantity(existingItem.getQuantity() + guestItem.getQuantity());
+                                },
+                                () -> {
+                                    // Thêm mới nếu chưa có mặt hàng đó trong userCart
+                                    userCart.getCartItems().add(guestItem);
+                                }
+                        );
+            }
+            // Sau khi merge, xoá guestCart
             guestCartRepository.deleteById(sessionId);
         }
-
-        return cartRepository.save(userCart);
+        // Lưu và trả về giỏ hàng của user
+        return cartRepository.save(updateCartInfor(userCart));
     }
+
 
     @Override
     public Cart increaseCartItem(String userId, String productId) {
@@ -192,30 +139,7 @@ public class CartService implements com.example.backend.service.CartService {
             throw new NotFoundException("Product not found in cart");
         }
 
-        List<String> productIds = cart.getCartItems().stream()
-                .map(CartItem::getProductId)
-                .collect(Collectors.toList());
-
-        // Truy vấn tất cả sản phẩm trong một lần
-        List<Product> products = productRepository.findAllById(productIds);
-
-        // Tạo Map để truy xuất giá nhanh
-        Map<String, Integer> productPriceMap = products.stream()
-                .collect(Collectors.toMap(Product::getId, Product::getPrice));
-
-        // Tính tổng số lượng và tổng giá trị
-        int totalPrice = 0;
-        int totalItem = 0;
-
-        for (CartItem i : cart.getCartItems()) {
-            totalItem += i.getQuantity();
-            totalPrice += productPriceMap.get(i.getProductId()) * i.getQuantity();
-        }
-
-        cart.setTotalItem(totalItem);
-        cart.setTotalPrice(totalPrice);
-
-        return cartRepository.save(cart);
+        return cartRepository.save(updateCartInfor(cart));
     }
 
     @Override
@@ -240,6 +164,11 @@ public class CartService implements com.example.backend.service.CartService {
             throw new NotFoundException("Product not found in cart");
         }
 
+        return cartRepository.save(updateCartInfor(cart));
+    }
+
+    @Override
+    public Cart updateCartInfor(Cart cart) {
         List<String> productIds = cart.getCartItems().stream()
                 .map(CartItem::getProductId)
                 .collect(Collectors.toList());
@@ -262,7 +191,6 @@ public class CartService implements com.example.backend.service.CartService {
 
         cart.setTotalItem(totalItem);
         cart.setTotalPrice(totalPrice);
-
-        return cartRepository.save(cart);
+        return cart;
     }
 }

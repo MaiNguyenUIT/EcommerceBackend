@@ -12,4 +12,5 @@ public interface GuestCartService {
     void clearCart(String sessionId); // Xóa toàn bộ giỏ hàng
     GuestCart increaseCartItem(String sessionId, String productId);
     GuestCart decreaseCartItem(String sessionId, String productId);
+    GuestCart updateCartInfor(GuestCart guestCart);
 }

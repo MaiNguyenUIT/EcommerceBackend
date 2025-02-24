@@ -85,4 +85,9 @@ public class ProductService implements com.example.backend.service.ProductServic
     public List<Product> filterProductByCategory(String categoryName) {
         return productRepository.findBycategoryName(categoryName);
     }
+
+    @Override
+    public List<Product> getAllActiveProduct() {
+        return productRepository.findByproductState(PRODUCT_STATE.ACTIVE);
+    }
 }

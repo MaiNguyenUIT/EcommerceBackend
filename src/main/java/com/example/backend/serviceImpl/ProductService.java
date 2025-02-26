@@ -58,6 +58,7 @@ public class ProductService implements com.example.backend.service.ProductServic
         existProduct.setCategoryName(productDTO.getCategoryName());
         existProduct.setRegularPrice(productDTO.getRegularPrice());
         existProduct.setQuantity(productDTO.getQuantity());
+        existProduct.setProductState(productDTO.getProductState());
         return ProductMapper.INSTANCE.toDTO(productRepository.save(existProduct));
     }
 

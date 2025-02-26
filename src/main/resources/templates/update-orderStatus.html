@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cập nhật đơn hàng</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .header {
+            background-color: #007BFF;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        .content {
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .footer {
+            background-color: #f4f4f4;
+            color: #888888;
+            font-size: 12px;
+            text-align: center;
+            padding: 10px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: #28a745;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h2>Cập nhật đơn hàng</h2>
+    </div>
+    <div class="content">
+        <p>Xin chào,</p>
+        <p>Đơn hàng <strong>#<span th:text="${orderId}"></span></strong> của bạn đã được cập nhật trạng thái thành: <strong th:text="${orderStatus}"></strong>.</p>
+        <p>Vui lòng truy cập trang <a th:href="@{'https://yourshop.com/orders/' + ${orderId}}">đơn hàng của bạn</a> để xem chi tiết.</p>
+        <p>Nếu có bất kỳ thắc mắc nào, hãy liên hệ với chúng tôi.</p>
+        <a class="button" th:href="@{'https://yourshop.com/orders/' + ${orderId}}">Xem đơn hàng</a>
+    </div>
+    <div class="footer">
+        <p>© 2025 YourShop. All rights reserved.</p>
+    </div>
+</div>
+</body>
+</html>

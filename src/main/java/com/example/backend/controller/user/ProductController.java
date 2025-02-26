@@ -28,12 +28,12 @@ public class ProductController {
     }
     @GetMapping()
     public ResponseEntity<ApiResult<List<Product>>> getAllProduct(){
-        List<Product> products = productService.getAllProduct();
+        List<Product> products = productService.getAllActiveProduct();
         ApiResult apiResult = mapResult.map(products, "Get all product successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @GetMapping("/category/{categoryName}")
-    public ResponseEntity<ApiResult<List<Product>>> getAllProduct(@PathVariable String categoryName){
+    public ResponseEntity<ApiResult<List<Product>>> getProductByCategory(@PathVariable String categoryName){
         List<Product> products = productService.filterProductByCategory(categoryName);
         ApiResult apiResult = mapResult.map(products, "Get product by category " + categoryName + " successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);

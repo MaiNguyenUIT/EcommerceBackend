@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/admin/product")
 public class AdminProductController {
@@ -40,5 +42,11 @@ public class AdminProductController {
         User user = userService.findUserByJwtToken(jwt);
         productService.deleteProduct(id);
         return new ResponseEntity<>("Delete product successfully", HttpStatus.OK);
+    }
+    @GetMapping()
+    public ResponseEntity<ApiResult<List<Product>>> getAllProduct(){
+        List<Product> products = productService.getAllProduct();
+        ApiResult apiResult = mapResult.map(products, "Get all product successfully");
+        return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
 }

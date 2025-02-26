@@ -35,6 +35,7 @@ public class AppConfig {
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/auth/changePass").authenticated()
                         .requestMatchers("/api/rating").authenticated()
+                        .requestMatchers("/api/order").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(new JwtTokenValidator(tokenBlacklistService), BasicAuthenticationFilter.class)
                 .csrf(csrt -> csrt.disable())

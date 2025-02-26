@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác Nhận Đơn Hàng</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 30px auto; background-color: #ffffff;
+                     border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+        .header { background-color: #4CAF50; color: #ffffff; padding: 20px; text-align: center; font-size: 22px; }
+        .content { padding: 20px; color: #333; }
+        .content p { margin: 10px 0; font-size: 16px; }
+        .order-details { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .order-details td { padding: 10px; border: 1px solid #ddd; }
+        .footer { background-color: #f4f4f4; color: #666; text-align: center; padding: 15px; font-size: 14px; }
+        .button { display: block; width: 200px; margin: 20px auto; padding: 12px; text-align: center;
+                  background-color: #007BFF; color: #ffffff; text-decoration: none; border-radius: 5px; font-size: 16px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">Xác Nhận Đơn Hàng</div>
+    <div class="content">
+        <p>Chào bạn,</p>
+        <p>Cảm ơn bạn đã mua sắm tại <strong>Shop của chúng tôi</strong>. Dưới đây là thông tin đơn hàng của bạn:</p>
+        <table class="order-details">
+            <tr><td><strong>Mã đơn hàng</strong></td><td>[[${orderId}]]</td></tr>
+            <tr><td><strong>Số tiền</strong></td><td>[[${orderAmount}]] VND</td></tr>
+            <tr><td><strong>Trạng thái</strong></td><td><strong>[[${orderStatus}]]</strong></td></tr>
+        </table>
+        <p>Chúng tôi sẽ xử lý đơn hàng của bạn và giao hàng sớm nhất có thể.</p>
+        <a class="button" href="https://yourshop.com/orders/[[${orderId}]]">Xem đơn hàng</a>
+    </div>
+    <div class="footer">&copy; 2025 YourShop. All rights reserved.</div>
+</div>
+
+</body>
+</html>

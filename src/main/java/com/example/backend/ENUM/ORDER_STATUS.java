@@ -6,5 +6,5 @@ public enum ORDER_STATUS {
     ON_GOING,
     DELIVERED,
     SUCCESS,
-    CANCELED,
+    CANCELLED,
 }

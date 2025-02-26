@@ -20,8 +20,6 @@ public interface UserAccountMapper {
     @Mapping(target = "photo", ignore = true)
     @Mapping(target = "role", ignore = true)
     @Mapping(target = "address", ignore = true)
-    @Mapping(target = "cartId", ignore = true)
-    @Mapping(target = "wishListId", ignore = true)
     @Mapping(target = "password", ignore = true) // Sẽ xử lý trong @AfterMapping
 
     User toEntity(UserAccountDTO dto);

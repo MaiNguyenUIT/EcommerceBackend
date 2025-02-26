@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(
         "orders"
@@ -22,5 +24,5 @@ public class Order {
     private String coupon;
     private ShippingAddress shippingAddress;
     private PAYMENT_METHOD paymentMethod;
-    private Cart cart;
+    private List<OrderItem> orderItems = new ArrayList<>();
 }

@@ -81,7 +81,7 @@ public class CartService implements com.example.backend.service.CartService {
         Cart cart = cartRepository.findByuserId(userId)
                 .orElseThrow(() -> new NotFoundException("Cart not found"));
         // Find and remove the cart item by productId
-        cart.getCartItems().removeIf(item -> item.getProductName().equals(productId));
+        cart.getCartItems().removeIf(item -> item.getProductId().equals(productId));
         // Save the updated cart
         return cartRepository.save(updateCartInfor(cart));
     }
@@ -173,14 +173,11 @@ public class CartService implements com.example.backend.service.CartService {
                 .map(CartItem::getProductId)
                 .collect(Collectors.toList());
 
-        // Truy vấn tất cả sản phẩm trong một lần
         List<Product> products = productRepository.findAllById(productIds);
 
-        // Tạo Map để truy xuất giá nhanh
         Map<String, Integer> productPriceMap = products.stream()
                 .collect(Collectors.toMap(Product::getId, Product::getPrice));
 
-        // Tính tổng số lượng và tổng giá trị
         int totalPrice = 0;
         int totalItem = 0;
 

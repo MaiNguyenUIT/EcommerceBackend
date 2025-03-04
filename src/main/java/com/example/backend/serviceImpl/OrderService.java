@@ -69,7 +69,6 @@ public class OrderService implements com.example.backend.service.OrderService {
                 OrderItem orderItem = new OrderItem();
                 orderItem.setQuantity(i.getQuantity());
                 orderItem.setProductId(i.getProductId());
-                orderItem.setProductName(i.getProductName());
                 order.getOrderItems().add(orderItem);
             }
             order.setOrderAmount(cart.getTotalPrice());

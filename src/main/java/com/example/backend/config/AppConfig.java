@@ -32,10 +32,12 @@ public class AppConfig {
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize -> Authorize
                         .requestMatchers(HttpMethod.GET, "/api/rating").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/comment").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/auth/changePass").authenticated()
                         .requestMatchers("/api/rating").authenticated()
                         .requestMatchers("/api/order").authenticated()
+                        .requestMatchers("/api/comment").authenticated()
                         .anyRequest().permitAll())
                 .addFilterBefore(new JwtTokenValidator(tokenBlacklistService), BasicAuthenticationFilter.class)
                 .csrf(csrt -> csrt.disable())

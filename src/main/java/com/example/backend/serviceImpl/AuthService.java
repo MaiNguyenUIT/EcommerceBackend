@@ -129,11 +129,11 @@ public class AuthService implements com.example.backend.service.AuthService {
         UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
 
         if(userDetails == null){
-            throw new BadCredentialsException("Invalid username....");
+            throw new BadRequestException("Invalid username....");
         }
 
         if(!passwordEncoder.matches(password,userDetails.getPassword())){
-            throw new BadCredentialsException("Invalid password");
+            throw new BadRequestException("Invalid password");
         }
 
         return new UsernamePasswordAuthenticationToken(userDetails,

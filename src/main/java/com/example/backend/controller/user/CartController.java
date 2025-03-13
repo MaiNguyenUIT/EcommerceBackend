@@ -28,7 +28,7 @@ public class CartController {
     @PostMapping()
     private ResponseEntity<ApiResult<Cart>> addItemToUserCart(@RequestHeader("Authorization") String jwt, @RequestBody CartItemDTO cartItemDTO) throws Exception {
         User user = userService.findUserByJwtToken(jwt);
-        ApiResult<Cart> apiResult = mapResult.map(cartService.addItemToUserCart(user.getId(), cartItemDTO), "Add " + cartItemDTO.getProductName() + " to cart successfully");
+        ApiResult<Cart> apiResult = mapResult.map(cartService.addItemToUserCart(user.getId(), cartItemDTO), "Add " + cartItemDTO.getProductId() + " to cart successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @PostMapping("/merge/{sessionId}")

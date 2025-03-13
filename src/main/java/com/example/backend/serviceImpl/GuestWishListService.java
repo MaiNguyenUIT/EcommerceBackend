@@ -76,7 +76,6 @@ public class GuestWishListService implements com.example.backend.service.GuestWi
                     .orElseThrow(() -> new NotFoundException("Product with id: " + productId + " not found in wish list"));
             CartItemDTO cartItemDTO = new CartItemDTO();
             cartItemDTO.setProductId(productId);
-            cartItemDTO.setProductName(product.getName());
             guestCartService.addItemToGuestCart(sessionId, cartItemDTO);
             wishList.getWishListItems().removeIf(item -> item.getProductId().equals(productId));
 

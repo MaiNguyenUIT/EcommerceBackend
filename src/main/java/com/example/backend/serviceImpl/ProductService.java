@@ -1,20 +1,31 @@
 package com.example.backend.serviceImpl;
 
 import com.example.backend.DTO.ProductDTO;
+import com.example.backend.DTO.response.ProductResponse;
 import com.example.backend.ENUM.PRODUCT_STATE;
 import com.example.backend.exception.BadRequestException;
 import com.example.backend.exception.NotFoundException;
 import com.example.backend.mapper.ProductMapper;
+import com.example.backend.mapper.ResponseMapper.ProductResMapper;
+import com.example.backend.model.Category;
 import com.example.backend.model.Product;
+import com.example.backend.repository.CategoryRepository;
 import com.example.backend.repository.ProductRepository;
+import com.example.backend.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 public class ProductService implements com.example.backend.service.ProductService {
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Override
     public ProductDTO createProduct(ProductDTO productDTO) {
         Product existProduct = productRepository.findByname(productDTO.getName());
@@ -29,6 +40,11 @@ public class ProductService implements com.example.backend.service.ProductServic
         }
         if(productDTO.getRegularPrice() < 0){
             throw new BadRequestException("Product regular price must be more than 0");
+        }
+        if(productDTO.getQuantity() > 0){
+            productDTO.setProductState(PRODUCT_STATE.ACTIVE);
+        } else {
+            productDTO.setProductState(PRODUCT_STATE.HIDDEN);
         }
         Product product = ProductMapper.INSTANCE.toEntity(productDTO);
         productRepository.save(product);
@@ -51,14 +67,16 @@ public class ProductService implements com.example.backend.service.ProductServic
         if(productDTO.getRegularPrice() < 0){
             throw new BadRequestException("Product regular price must be more than 0");
         }
+
         existProduct.setPrice(productDTO.getPrice());
         existProduct.setName(productDTO.getName());
         existProduct.setDescription(productDTO.getDescription());
         existProduct.setImage(productDTO.getImage());
-        existProduct.setCategoryName(productDTO.getCategoryName());
+        existProduct.setCategoryId(productDTO.getCategoryId());
         existProduct.setRegularPrice(productDTO.getRegularPrice());
         existProduct.setQuantity(productDTO.getQuantity());
         existProduct.setProductState(productDTO.getProductState());
+
         return ProductMapper.INSTANCE.toDTO(productRepository.save(existProduct));
     }
 
@@ -71,24 +89,72 @@ public class ProductService implements com.example.backend.service.ProductServic
     }
 
     @Override
-    public Product getProduct(String id) {
+    public ProductResponse getProduct(String id) {
         Product existProduct = productRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Product not found"));
-        return existProduct;
+        ProductResponse productResponse = ProductResMapper.INSTANCE.toRes(existProduct);
+        productResponse.setCategoryName(categoryRepository.findById(existProduct.getCategoryId())
+                .orElseThrow(() -> new NotFoundException("Category not found")).getTitle());
+        return productResponse;
     }
 
     @Override
-    public List<Product> getAllProduct() {
-        return productRepository.findAll();
+    public List<ProductResponse> getAllProduct() {
+        List<Product> products = productRepository.findAll();
+
+        List<String> categoryIds = products.stream()
+                .map(Product::getCategoryId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<String, String> categoryMap = categoryRepository.findAllById(categoryIds)
+                .stream()
+                .collect(Collectors.toMap(Category::getId, Category::getTitle));
+
+        return products.stream().map(product -> {
+            ProductResponse productResponse = ProductResMapper.INSTANCE.toRes(product);
+            productResponse.setCategoryName(categoryMap.get(product.getCategoryId())); // Lấy tên category từ Map
+            return productResponse;
+        }).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public List<ProductResponse> filterProductByCategory(String categoryId) {
+        List<Product> products = productRepository.findBycategoryId(categoryId);
+
+        List<String> categoryIds = products.stream()
+                .map(Product::getCategoryId)
+                .distinct()
+                .collect(Collectors.toList());
+
+        Map<String, String> categoryMap = categoryRepository.findAllById(categoryIds)
+                .stream()
+                .collect(Collectors.toMap(Category::getId, Category::getTitle));
+
+        return products.stream().map(product -> {
+            ProductResponse productResponse = ProductResMapper.INSTANCE.toRes(product);
+            productResponse.setCategoryName(categoryMap.get(product.getCategoryId())); // Lấy tên category từ Map
+            return productResponse;
+        }).collect(Collectors.toList());
     }
 
     @Override
-    public List<Product> filterProductByCategory(String categoryName) {
-        return productRepository.findBycategoryName(categoryName);
-    }
+    public List<ProductResponse> getAllActiveProduct() {
+        List<Product> products = productRepository.findByproductState(PRODUCT_STATE.ACTIVE);
+        List<String> categoryIds = products.stream()
+                .map(Product::getCategoryId)
+                .distinct()
+                .collect(Collectors.toList());
 
-    @Override
-    public List<Product> getAllActiveProduct() {
-        return productRepository.findByproductState(PRODUCT_STATE.ACTIVE);
+        Map<String, String> categoryMap = categoryRepository.findAllById(categoryIds)
+                .stream()
+                .collect(Collectors.toMap(Category::getId, Category::getTitle));
+
+        return products.stream().map(product -> {
+            ProductResponse productResponse = ProductResMapper.INSTANCE.toRes(product);
+            productResponse.setCategoryName(categoryMap.get(product.getCategoryId())); // Lấy tên category từ Map
+            return productResponse;
+        }).collect(Collectors.toList());
     }
 }

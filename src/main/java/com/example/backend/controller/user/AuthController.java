@@ -24,7 +24,6 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> createUserHandler(@RequestBody UserAccountDTO userAccountDTO) throws Exception {
         return new ResponseEntity<>(authService.signUp(userAccountDTO), HttpStatus.CREATED);

@@ -15,7 +15,7 @@ public class Product {
     @Id
     private String id;
     private String name;
-    private String categoryName;
+    private String categoryId;
     private int quantity;
     private int sold = 0;
     private int regularPrice;

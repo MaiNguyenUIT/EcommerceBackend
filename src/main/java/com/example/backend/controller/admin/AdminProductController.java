@@ -1,11 +1,14 @@
 package com.example.backend.controller.admin;
 
 import com.example.backend.ApiResult.ApiResult;
+import com.example.backend.DTO.CommentDTO;
 import com.example.backend.DTO.ProductDTO;
+import com.example.backend.DTO.response.ProductResponse;
 import com.example.backend.model.Product;
 import com.example.backend.model.User;
 import com.example.backend.service.ProductService;
 import com.example.backend.service.UserService;
+import com.example.backend.utils.ApiResponse;
 import com.example.backend.utils.MapResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,9 +47,13 @@ public class AdminProductController {
         return new ResponseEntity<>("Delete product successfully", HttpStatus.OK);
     }
     @GetMapping()
-    public ResponseEntity<ApiResult<List<Product>>> getAllProduct(){
-        List<Product> products = productService.getAllProduct();
-        ApiResult apiResult = mapResult.map(products, "Get all product successfully");
-        return new ResponseEntity<>(apiResult, HttpStatus.OK);
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProduct(){
+        List<ProductResponse> products = productService.getAllProduct();
+        ApiResponse<List<ProductResponse>> apiResponse = ApiResponse.<List<ProductResponse>>builder()
+                .status(200)
+                .data(products)
+                .message("Get all product successfully")
+                .build();
+        return ResponseEntity.ok(apiResponse);
     }
 }

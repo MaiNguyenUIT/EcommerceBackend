@@ -9,10 +9,8 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface ProductMapper {
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
-    @Mapping(target = "id", ignore = true) // ID sẽ do database sinh ra
-    @Mapping(target = "sold", ignore = true) // Nếu DTO không có thuộc tính này
-    @Mapping(target = "rating", ignore = true) // Nếu không cần đánh giá
-    @Mapping(target = "productState", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "sold", ignore = true)
     Product toEntity(ProductDTO productDTO);
 
 

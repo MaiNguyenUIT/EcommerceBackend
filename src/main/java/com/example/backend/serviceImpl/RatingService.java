@@ -25,6 +25,7 @@ public class RatingService implements com.example.backend.service.RatingService 
     private RatingRepository ratingRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired CheckToxicService checkToxicService;
     @Override
     public RatingResponse createRating(RatingDTO ratingDTO, String userId, String productId) {
         RatingResponse ratingResponse = new RatingResponse();
@@ -57,11 +58,10 @@ public class RatingService implements com.example.backend.service.RatingService 
         //Luu rating vao database
         rating.setUserId(userId);
         rating.setProductId(productId);
-        rating.setName(user.getName());
         ratingRepository.save(rating);
         //tra ve response
         ratingResponse.setReview(rating.getReview());
-        ratingResponse.setUsername(rating.getName());
+        ratingResponse.setUsername(userRepository.findById(userId).orElse(null).getName());
         ratingResponse.setStar(rating.getStar());
         ratingResponse.setReviewDate(rating.getReviewDate());
         return ratingResponse;

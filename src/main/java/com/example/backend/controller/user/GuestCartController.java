@@ -24,7 +24,7 @@ public class GuestCartController {
     private MapResult mapResult;
     @PostMapping("/{sessionId}")
     private ResponseEntity<ApiResult<GuestCart>> addItemToGuestCart(@PathVariable String sessionId, @RequestBody CartItemDTO cartItemDTO) throws Exception {
-        ApiResult<GuestCart> apiResult = mapResult.map(guestCartService.addItemToGuestCart(sessionId, cartItemDTO), "Add " + cartItemDTO.getProductName() + " to cart successfully");
+        ApiResult<GuestCart> apiResult = mapResult.map(guestCartService.addItemToGuestCart(sessionId, cartItemDTO), "Add " + cartItemDTO.getProductId() + " to cart successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @GetMapping("/{sessionId}")

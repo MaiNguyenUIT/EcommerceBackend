@@ -11,7 +11,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     Product findByname(String productName);
     @Query(value = "{ 'name': ?0, '_id': { $ne: ?1 } }", exists = true)
     boolean existsByNameAndNotId(String name, String id);
-    List<Product> findBycategoryName(String category);
+    List<Product> findBycategoryId(String categoryId);
     List<Product> findByproductState(PRODUCT_STATE state);
 
 }

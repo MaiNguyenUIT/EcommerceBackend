@@ -16,7 +16,6 @@ public class Rating {
     private int star;
     private String review;
     private LocalDateTime reviewDate;
-    private String name;
     private String userId;
     private String productId;
 }

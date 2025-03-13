@@ -81,7 +81,6 @@ public class WishListService implements com.example.backend.service.WishListServ
                     .orElseThrow(() -> new NotFoundException("Product with id: " + productId + " not found in wish list"));
             CartItemDTO cartItemDTO = new CartItemDTO();
             cartItemDTO.setProductId(productId);
-            cartItemDTO.setProductName(product.getName());
             cartService.addItemToUserCart(userId, cartItemDTO);
             wishList.getWishListItems().removeIf(item -> item.getProductId().equals(productId));
 
@@ -97,7 +96,7 @@ public class WishListService implements com.example.backend.service.WishListServ
     @Override
     public WishList mergeGuestToUser(String sessionId, String userId) {
         GuestWishList guestWishList = guestWishListRepository.findById(sessionId)
-                .orElseThrow(() -> new NotFoundException("Guest wish list is empty"));
+                .orElseThrow(null);
 
         WishList wishList = wishListRepository.findByuserId(userId);
         if(wishList == null){

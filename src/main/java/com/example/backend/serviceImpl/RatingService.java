@@ -33,37 +33,18 @@ public class RatingService implements com.example.backend.service.RatingService 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found with id" + userId));
 
-        String flaskApiUrl = "http://localhost:5000/predict"; // Địa chỉ API Flask
-        RestTemplate restTemplate = new RestTemplate();
-
-        // Tạo nội dung request
-        Map<String, String> requestBody = new HashMap<>();
-        requestBody.put("review", rating.getReview());
-        HttpHeaders headers = restTemplate.headForHeaders(flaskApiUrl);
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        org.springframework.http.HttpEntity<Map<String, String>> entity = new HttpEntity<>(requestBody, headers);
-
-        // Gửi yêu cầu POST đến Flask API
-        ResponseEntity<Map> response = restTemplate.exchange(flaskApiUrl, HttpMethod.POST, (org.springframework.http.HttpEntity<?>) entity, Map.class);
-
-        // Xử lý phản hồi từ API
-        if (response.getStatusCode() == HttpStatus.OK) {
-            Map<String, Object> responseBody = response.getBody();
-            if (responseBody != null && "Toxic".equals(responseBody.get("Toxic"))) {
-                throw new BadRequestException("Review contains toxic content and cannot be submitted.");
-            }
+        if(checkToxicService.checkToxic(ratingDTO.getReview())){
+            throw new BadRequestException("Rating contains toxic content and cannot be submitted.");
         } else {
-            throw new RuntimeException("Error occurred while calling toxicity API: " + response.getStatusCode());
+            rating.setUserId(userId);
+            rating.setProductId(productId);
+            ratingRepository.save(rating);
+            //tra ve response
+            ratingResponse.setReview(rating.getReview());
+            ratingResponse.setUsername(userRepository.findById(userId).orElse(null).getName());
+            ratingResponse.setStar(rating.getStar());
+            ratingResponse.setReviewDate(rating.getReviewDate());
         }
-        //Luu rating vao database
-        rating.setUserId(userId);
-        rating.setProductId(productId);
-        ratingRepository.save(rating);
-        //tra ve response
-        ratingResponse.setReview(rating.getReview());
-        ratingResponse.setUsername(userRepository.findById(userId).orElse(null).getName());
-        ratingResponse.setStar(rating.getStar());
-        ratingResponse.setReviewDate(rating.getReviewDate());
         return ratingResponse;
     }
 

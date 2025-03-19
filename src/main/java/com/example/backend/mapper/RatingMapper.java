@@ -12,7 +12,6 @@ import org.mapstruct.factory.Mappers;
 public interface RatingMapper {
     RatingMapper INSTANCE = Mappers.getMapper(RatingMapper.class);
     @Mapping(target = "id", ignore = true) // ID sẽ do database sinh ra
-    @Mapping(target = "name", ignore = true) // Nếu DTO không có thuộc tính này
     @Mapping(target = "productId", ignore = true)
     @Mapping(target = "userId", ignore = true)
     Rating toEntity(RatingDTO ratingDTO);

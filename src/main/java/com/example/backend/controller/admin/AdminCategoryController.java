@@ -26,7 +26,6 @@ public class AdminCategoryController {
         User user = userService.findUserByJwtToken(jwt);
         CategoryDTO newCategory = categoryService.createCategory(categoryDTO);
         ApiResult<CategoryDTO> apiResult = mapResult.map(newCategory, "Create category successfully");
-
         return new ResponseEntity<>(apiResult, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")

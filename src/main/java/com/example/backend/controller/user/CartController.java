@@ -9,7 +9,6 @@ import com.example.backend.service.CartService;
 import com.example.backend.service.GuestCartService;
 import com.example.backend.service.UserService;
 import com.example.backend.utils.MapResult;
-import io.swagger.annotations.Authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

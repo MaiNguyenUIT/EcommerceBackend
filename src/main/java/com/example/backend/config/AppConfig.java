@@ -33,6 +33,7 @@ public class AppConfig {
                 .authorizeHttpRequests(Authorize -> Authorize
                         .requestMatchers(HttpMethod.GET, "/api/rating").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/comment").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/admin/**").hasAnyRole("ADMIN")
                         .requestMatchers("/auth/changePass").authenticated()
                         .requestMatchers("/api/rating").authenticated()
@@ -53,7 +54,6 @@ public class AppConfig {
                 CorsConfiguration cfg = new CorsConfiguration();
                 cfg.setAllowedOrigins(Arrays.asList(
                         "http://localhost:5173/"
-                        //"https://warehouse-management-79sj.vercel.app/"
 
                 ));
                 cfg.setAllowedMethods(Collections.singletonList("*"));

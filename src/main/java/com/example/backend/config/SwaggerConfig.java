@@ -22,6 +22,7 @@ public class SwaggerConfig {
                                         .type(SecurityScheme.Type.HTTP)
                                         .scheme("bearer")
                                         .bearerFormat("JWT")))
+                .addSecurityItem(new SecurityRequirement().addList("bearerAuth")) // 🔥 Thêm dòng này để Swagger gửi token
                 .info(new Info()
                         .title("Ecommerce API")
                         .version("v1.0")

@@ -36,6 +36,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String jwt) throws Exception{
+
         authService.logOut(jwt);
         return new ResponseEntity<>("Successfully logged out", HttpStatus.OK);
     }
@@ -50,5 +51,10 @@ public class AuthController {
         User user = userService.findUserByJwtToken(jwt);
         userService.changePassword(changePasswordRequest, user);
         return new ResponseEntity<>("Change password successfully", HttpStatus.OK);
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<User> getUser(@RequestHeader("Authorization") String jwt) throws Exception {
+        return new ResponseEntity<>(userService.findUserByJwtToken(jwt), HttpStatus.OK);
     }
 }

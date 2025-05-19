@@ -22,15 +22,13 @@ public class AdminCategoryController {
     @Autowired
     private MapResult mapResult;
     @PostMapping("")
-    public ResponseEntity<ApiResult<CategoryDTO>> createCategory(@RequestHeader("Authorization") String jwt, @RequestBody CategoryDTO categoryDTO) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<CategoryDTO>> createCategory(@RequestBody CategoryDTO categoryDTO) throws Exception{
         CategoryDTO newCategory = categoryService.createCategory(categoryDTO);
         ApiResult<CategoryDTO> apiResult = mapResult.map(newCategory, "Create category successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<CategoryDTO>> updateCategory(@RequestHeader("Authorization") String jwt, @RequestBody CategoryDTO categoryDTO, @PathVariable String id) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<CategoryDTO>> updateCategory(@RequestBody CategoryDTO categoryDTO, @PathVariable String id) throws Exception{
         CategoryDTO category = categoryService.updateCategory(categoryDTO, id);
         ApiResult<CategoryDTO> apiResult = mapResult.map(category, "Update category successfully");
 
@@ -38,8 +36,7 @@ public class AdminCategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResult> deleteCategory(@RequestHeader("Authorization") String jwt, @PathVariable String id) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult> deleteCategory(@PathVariable String id) throws Exception{
         categoryService.deleteCategoryById(id);
         ApiResult apiResult = mapResult.map(null,"Delete category successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);

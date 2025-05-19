@@ -22,38 +22,38 @@ public class WishListController {
     @Autowired
     private MapResult mapResult;
     @PostMapping()
-    public ResponseEntity<ApiResult<WishList>> addItemToWishList(@RequestHeader("Authorization") String jwt, @RequestBody WishListItemDTO wishListItemDTO) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<WishList>> addItemToWishList(@RequestBody WishListItemDTO wishListItemDTO) throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult<WishList> apiResult = mapResult.map(wishListService.addToWishList(user.getId(), wishListItemDTO), "Add item to wish list successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @DeleteMapping("/{productId}")
-    public ResponseEntity<ApiResult<WishList>> removeItemFromWishList(@RequestHeader("Authorization") String jwt, @PathVariable String productId) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<WishList>> removeItemFromWishList(@PathVariable String productId) throws Exception{
+        User user = userService.findUserByJwtToken();
         ApiResult<WishList> apiResult = mapResult.map(wishListService.removeFromWishList(user.getId(), productId), "Remove item from wish list successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @GetMapping()
-    public ResponseEntity<ApiResult<WishList>> getUserWishList(@RequestHeader("Authorization") String jwt) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<WishList>> getUserWishList() throws Exception{
+        User user = userService.findUserByJwtToken();
         ApiResult<WishList> apiResult = mapResult.map(wishListService.getUserWishList(user.getId()), "Get user wish list successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @PostMapping("/{productId}")
-    public ResponseEntity<ApiResult<WishList>> addWishListItemToCart(@RequestHeader("Authorization") String jwt, @PathVariable String productId) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<WishList>> addWishListItemToCart(@PathVariable String productId) throws Exception{
+        User user = userService.findUserByJwtToken();
         ApiResult<WishList> apiResult = mapResult.map(wishListService.addWishListItemToCart(user.getId(), productId), "Add wish list item to cart successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @DeleteMapping
-    public ResponseEntity<String> clearWishList(@RequestHeader("Authorization") String jwt) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<String> clearWishList() throws Exception{
+        User user = userService.findUserByJwtToken();
         wishListService.clearWishList(user.getId());
         return new ResponseEntity<>("Clear wish list successfully", HttpStatus.OK);
     }
     @PostMapping("/merge/{sessionId}")
-    public ResponseEntity<ApiResult<WishList>> mergeGuestToUser(@RequestHeader("Authorization") String jwt, @PathVariable String sessionId) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<WishList>> mergeGuestToUser(@PathVariable String sessionId) throws Exception{
+        User user = userService.findUserByJwtToken();
         ApiResult<WishList> apiResult = mapResult.map(wishListService.mergeGuestToUser(sessionId, user.getId()), "Merge guest to user wish list successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }

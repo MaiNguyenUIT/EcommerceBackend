@@ -22,8 +22,8 @@ public class CommentController {
     private UserService userService;
 
     @PostMapping()
-    public ResponseEntity<ApiResponse<CommentDTO>> createComment(@RequestHeader("Authorization") String jwt, @RequestParam String productId, @RequestBody CommentDTO commentDTO) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResponse<CommentDTO>> createComment(@RequestParam String productId, @RequestBody CommentDTO commentDTO) throws Exception{
+        User user = userService.findUserByJwtToken();
         CommentDTO comment = commentService.createComment(user.getId(), productId, commentDTO);
         ApiResponse<CommentDTO> apiResponse = ApiResponse.<CommentDTO>builder()
                 .status(200)
@@ -34,10 +34,9 @@ public class CommentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<CommentDTO>> updateComment(@RequestHeader("Authorization") String jwt,
-                                                                 @PathVariable String id,
+    public ResponseEntity<ApiResponse<CommentDTO>> updateComment(@PathVariable String id,
                                                                  @RequestBody CommentDTO commentDTO) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+        User user = userService.findUserByJwtToken();
         CommentDTO comment = commentService.updateComment(user.getId(), id, commentDTO);
         ApiResponse<CommentDTO> apiResponse = ApiResponse.<CommentDTO>builder()
                 .status(200)
@@ -48,9 +47,8 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<CommentDTO>> deleteComment(@RequestHeader("Authorization") String jwt,
-                                                                 @PathVariable String id) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResponse<CommentDTO>> deleteComment(@PathVariable String id) throws Exception{
+        User user = userService.findUserByJwtToken();
         commentService.deleteComment(id);
         ApiResponse<CommentDTO> apiResponse = ApiResponse.<CommentDTO>builder()
                 .status(200)

@@ -25,58 +25,55 @@ public class CartController {
     private MapResult mapResult;
     //Add to cart
     @PostMapping()
-    private ResponseEntity<ApiResult<Cart>> addItemToUserCart(@RequestHeader("Authorization") String jwt, @RequestBody CartItemDTO cartItemDTO) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    private ResponseEntity<ApiResult<Cart>> addItemToUserCart(@RequestBody CartItemDTO cartItemDTO) throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult<Cart> apiResult = mapResult.map(cartService.addItemToUserCart(user.getId(), cartItemDTO), "Add " + cartItemDTO.getProductId() + " to cart successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @PostMapping("/merge/{sessionId}")
-    private ResponseEntity<ApiResult<Cart>> mergeGuestToUser(@RequestHeader("Authorization") String jwt, @PathVariable String sessionId) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    private ResponseEntity<ApiResult<Cart>> mergeGuestToUser(@PathVariable String sessionId) throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult<Cart> apiResult = mapResult.map(cartService.mergeGuestCartToUserCart(sessionId, user.getId()), "Merge cart successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     //Get cart
     @GetMapping("/user")
-    private ResponseEntity<ApiResult<Cart>> getUserCart(@RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    private ResponseEntity<ApiResult<Cart>> getUserCart() throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult<Cart> apiResult = mapResult.map(cartService.getCartByUserId(user.getId()), "Get user cart successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     //Clear cart
     @DeleteMapping()
-    private ResponseEntity<String> clearUserCart(@RequestHeader("Authorization") String jwt) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    private ResponseEntity<String> clearUserCart() throws Exception{
+        User user = userService.findUserByJwtToken();
         cartService.clearCart(user.getId());
         return new ResponseEntity<>("Clear cart successfully", HttpStatus.OK);
     }
     //Delete item from cart
     @PutMapping()
-    private ResponseEntity<ApiResult<Cart>> deleteItemFromCart(@RequestHeader("Authorization") String jwt, @RequestParam String productId) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    private ResponseEntity<ApiResult<Cart>> deleteItemFromCart(@RequestParam String productId) throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult apiResult = mapResult.map(cartService.deleteItemFromCart(user.getId(), productId),
                 "Delete item with id: " + productId + " successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @PutMapping("/quantity")
-    private ResponseEntity<ApiResult<Cart>> updateItemQuantity(@RequestHeader("Authorization") String jwt,
-                                                               @RequestParam String productId,
+    private ResponseEntity<ApiResult<Cart>> updateItemQuantity(@RequestParam String productId,
                                                                @RequestBody int quantity) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+        User user = userService.findUserByJwtToken();
         ApiResult apiResult = mapResult.map(cartService.updateItemQuantity(user.getId(), productId, quantity), "Update item quantity successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @PutMapping("/increase")
-    private ResponseEntity<ApiResult<Cart>> increaseItemQuantity(@RequestHeader("Authorization") String jwt,
-                                                                 @RequestParam String productId) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    private ResponseEntity<ApiResult<Cart>> increaseItemQuantity(@RequestParam String productId) throws Exception{
+        User user = userService.findUserByJwtToken();
         ApiResult apiResult = mapResult.map(cartService.increaseCartItem(user.getId(), productId), "Increase product quantity successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @PutMapping("/decrease")
-    private ResponseEntity<ApiResult<Cart>> decreaseItemQuantity(@RequestHeader("Authorization") String jwt,
-                                                                 @RequestParam String productId) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    private ResponseEntity<ApiResult<Cart>> decreaseItemQuantity(@RequestParam String productId) throws Exception{
+        User user = userService.findUserByJwtToken();
         ApiResult apiResult = mapResult.map(cartService.decreaseCartItem(user.getId(), productId), "Decrease product quantity successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }

@@ -25,13 +25,13 @@ public class AdminOrderController {
     @Autowired
     private MapResult mapResult;
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<Order>> updateOrderStatus(@RequestHeader("Authorization") String jwt, @PathVariable String id, @RequestBody UpdateOrderStatusRequest request) throws Exception{
+    public ResponseEntity<ApiResult<Order>> updateOrderStatus(@PathVariable String id, @RequestBody UpdateOrderStatusRequest request) throws Exception{
         ApiResult<Order> apiResult = mapResult.map(adminOrderService.updateOrderStatus(id, request.getOrderStatus()), "Update order status successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
 
     @GetMapping()
-    public ResponseEntity<ApiResult<List<Order>>> getAllOrder(@RequestHeader("Authorization") String jwt) throws Exception{
+    public ResponseEntity<ApiResult<List<Order>>> getAllOrder() throws Exception{
         ApiResult<List<Order>> apiResult = mapResult.map(adminOrderService.getAllOrder(), "Update order status successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }

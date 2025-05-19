@@ -18,34 +18,29 @@ import java.util.List;
 @RequestMapping("api/admin/coupon")
 public class AdminCouponController {
     @Autowired
-    private UserService userService;
-    @Autowired
     private CouponService couponService;
     @Autowired
     private MapResult mapResult;
     @PostMapping
-    public ResponseEntity<ApiResult<CouponDTO>> createCoupon(@RequestHeader("Authorization") String jwt, @RequestBody CouponDTO couponDTO) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<CouponDTO>> createCoupon(@RequestBody CouponDTO couponDTO) throws Exception {
+
         CouponDTO createCouponDTO = couponService.createCoupon(couponDTO);
         ApiResult<CouponDTO> apiResult = mapResult.map(createCouponDTO, "Create coupon successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<CouponDTO>> updateCoupon(@RequestHeader("Authorization") String jwt, @RequestBody CouponDTO couponDTO, @PathVariable String id) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<CouponDTO>> updateCoupon(@RequestBody CouponDTO couponDTO, @PathVariable String id) throws Exception {
         CouponDTO updateCouponDTO = couponService.updateCoupon(couponDTO, id);
         ApiResult<CouponDTO> apiResult = mapResult.map(updateCouponDTO, "Update coupon successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCoupon(@RequestHeader("Authorization") String jwt, @PathVariable String id) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<String> deleteCoupon(@PathVariable String id) throws Exception {
         couponService.deleteCoupon(id);
         return new ResponseEntity<>("Update coupon successfully", HttpStatus.OK);
     }
     @GetMapping("")
-    public ResponseEntity<List<Coupon>> getAllCoupon(@RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<List<Coupon>> getAllCoupon() throws Exception {
         return new ResponseEntity<>(couponService.getAllCoupon(), HttpStatus.OK);
     }
 }

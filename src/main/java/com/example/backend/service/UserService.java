@@ -7,7 +7,7 @@ import com.example.backend.DTO.request.ChangePasswordRequest;
 import java.util.List;
 
 public interface UserService {
-    public User findUserByJwtToken(String jwt) throws Exception;
+    public User findUserByJwtToken() throws Exception;
 
     public User findUserByEmail(String username) throws Exception;
 

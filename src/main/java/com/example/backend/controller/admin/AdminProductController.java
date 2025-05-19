@@ -27,22 +27,21 @@ public class AdminProductController {
     @Autowired
     private MapResult mapResult;
     @PostMapping
-    public ResponseEntity<ApiResult<ProductDTO>> createProduct(@RequestHeader("Authorization") String jwt, @RequestBody ProductDTO productDTO) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<ProductDTO>> createProduct(@RequestBody ProductDTO productDTO) throws Exception{
+
         ProductDTO newProduct = productService.createProduct(productDTO);
         ApiResult<ProductDTO> apiResult = mapResult.map(newProduct, "Create product success");
         return new ResponseEntity<>(apiResult, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<ProductDTO>> updateProduct(@RequestHeader("Authorization") String jwt, @RequestBody ProductDTO productDTO, @PathVariable String id) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<ProductDTO>> updateProduct(@RequestBody ProductDTO productDTO, @PathVariable String id) throws Exception{
+
         ProductDTO updateProduct = productService.updateProduct(productDTO, id);
         ApiResult<ProductDTO> apiResult = mapResult.map(updateProduct, "Update product success");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@RequestHeader("Authorization") String jwt, @PathVariable String id) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<String> deleteProduct(@PathVariable String id) throws Exception{
         productService.deleteProduct(id);
         return new ResponseEntity<>("Delete product successfully", HttpStatus.OK);
     }

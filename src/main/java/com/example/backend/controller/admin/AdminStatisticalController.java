@@ -27,8 +27,7 @@ public class AdminStatisticalController {
     private UserService userService;
 
     @GetMapping("/revenue")
-    public ResponseEntity<ApiResponse<Double>> getTotalRevenue(@RequestHeader("Authorization") String jwt,
-                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+    public ResponseEntity<ApiResponse<Double>> getTotalRevenue(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
         ApiResponse<Double> apiResponse = ApiResponse.<Double>builder()
                 .data(statisticalService.getTotalRevenue(startDate, endDate))
@@ -38,8 +37,7 @@ public class AdminStatisticalController {
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping("/order")
-    public ResponseEntity<ApiResponse<Integer>> getTotalOrder(@RequestHeader("Authorization") String jwt,
-                                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+    public ResponseEntity<ApiResponse<Integer>> getTotalOrder(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
         ApiResponse<Integer> apiResponse = ApiResponse.<Integer>builder()
                 .data(statisticalService.getTotalOrders(startDate, endDate))
@@ -49,8 +47,7 @@ public class AdminStatisticalController {
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping("/bestSelling")
-    public ResponseEntity<ApiResponse<List<ProductStatistic>>> getBestSelling(@RequestHeader("Authorization") String jwt,
-                                                                              @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+    public ResponseEntity<ApiResponse<List<ProductStatistic>>> getBestSelling(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
 
         ApiResponse<List<ProductStatistic>> apiResponse = ApiResponse.<List<ProductStatistic>>builder()
@@ -61,8 +58,7 @@ public class AdminStatisticalController {
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping("/orderStatus-statistic")
-    public ResponseEntity<ApiResponse<Map<ORDER_STATUS, Integer>>> getOrderStatusStatistic(@RequestHeader("Authorization") String jwt,
-                                                                                           @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+    public ResponseEntity<ApiResponse<Map<ORDER_STATUS, Integer>>> getOrderStatusStatistic(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                                                            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
         ApiResponse<Map<ORDER_STATUS, Integer>> apiResponse = ApiResponse.<Map<ORDER_STATUS, Integer>>builder()
                 .data(statisticalService.getOrderStatusStatistics(startDate, endDate))
@@ -71,8 +67,7 @@ public class AdminStatisticalController {
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping("/productSold")
-    public ResponseEntity<ApiResponse<Integer>> getProductSold(@RequestHeader("Authorization") String jwt,
-                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+    public ResponseEntity<ApiResponse<Integer>> getProductSold(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
 
         ApiResponse<Integer> apiResponse = ApiResponse.<Integer>builder()
@@ -82,8 +77,7 @@ public class AdminStatisticalController {
         return ResponseEntity.ok(apiResponse);
     }
     @GetMapping("/revenueCategory")
-    public ResponseEntity<ApiResponse<Map<String, Double>>> getRevenueCategory(@RequestHeader("Authorization") String jwt,
-                                                                               @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
+    public ResponseEntity<ApiResponse<Map<String, Double>>> getRevenueCategory(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
                                                                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate){
 
         ApiResponse<Map<String, Double>> apiResponse = ApiResponse.<Map<String, Double>>builder()

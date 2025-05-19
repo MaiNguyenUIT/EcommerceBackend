@@ -99,7 +99,7 @@ public class AuthService implements com.example.backend.service.AuthService {
     @Override
     @Transactional
     public String logOut(String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+        User user = userService.findUserByJwtToken();
         Instant expirationTime = jwtProvider.extractExpiration(jwt).toInstant();
         long expirationMillis = expirationTime.toEpochMilli() - System.currentTimeMillis();
         jwt = jwt.substring(7);

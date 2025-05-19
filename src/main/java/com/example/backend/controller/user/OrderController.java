@@ -24,28 +24,28 @@ public class OrderController {
     @Autowired
     private MapResult mapResult;
     @PostMapping()
-    public ResponseEntity<ApiResult<Order>> createOrder(@RequestHeader("Authorization") String jwt, @RequestBody OrderDTO orderDTO) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<Order>> createOrder(@RequestBody OrderDTO orderDTO) throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult<Order> apiResult = mapResult.map(orderService.createOrder(user.getId(), orderDTO), "Create order successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.CREATED);
     }
 
     @GetMapping()
-    public ResponseEntity<ApiResult<List<Order>>> getUserOrder(@RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<List<Order>>> getUserOrder() throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult<List<Order>> apiResult = mapResult.map(orderService.getOrderByUserId(user.getId()), "Get user order successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResult<List<Order>>> getOrderById(@RequestHeader("Authorization") String jwt, @PathVariable String id) throws Exception {
+    public ResponseEntity<ApiResult<List<Order>>> getOrderById(@PathVariable String id) throws Exception {
         ApiResult<List<Order>> apiResult = mapResult.map(orderService.getOrderById(id), "Get detail order successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResult<Order>> cancelOrder(@RequestHeader("Authorization") String jwt, @PathVariable String id) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+    public ResponseEntity<ApiResult<Order>> cancelOrder(@PathVariable String id) throws Exception {
+        User user = userService.findUserByJwtToken();
         ApiResult<Order> apiResult = mapResult.map(orderService.cancelOrder(id, user.getId()), "Cancel order successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.OK);
     }

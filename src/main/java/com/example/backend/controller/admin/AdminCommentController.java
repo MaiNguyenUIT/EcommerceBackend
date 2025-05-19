@@ -19,10 +19,8 @@ public class AdminCommentController {
     private UserService userService;
 
     @PostMapping("/{id}")
-    public ResponseEntity<ApiResponse<CommentDTO>> replyComment(@RequestHeader("Authorization") String jwt,
-                                                                @RequestBody ReplyComment replyComment,
+    public ResponseEntity<ApiResponse<CommentDTO>> replyComment(@RequestBody ReplyComment replyComment,
                                                                 @PathVariable String id) throws Exception{
-        User user = userService.findUserByJwtToken(jwt);
         CommentDTO commentDTO = commentService.replyComment(id, replyComment);
         ApiResponse<CommentDTO> apiResponse = ApiResponse.<CommentDTO>builder()
                 .data(commentDTO)

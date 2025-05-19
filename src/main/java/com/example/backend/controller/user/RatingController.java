@@ -25,10 +25,9 @@ public class RatingController {
     @Autowired
     private MapResult mapResult;
     @PostMapping()
-    public ResponseEntity<ApiResult<RatingResponse>> createRating(@RequestHeader ("Authorization") String jwt,
-                                                                  @RequestBody RatingDTO ratingDTO,
+    public ResponseEntity<ApiResult<RatingResponse>> createRating(@RequestBody RatingDTO ratingDTO,
                                                                   @RequestParam String productId) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+        User user = userService.findUserByJwtToken();
         RatingResponse ratingResponse = ratingService.createRating(ratingDTO, user.getId(), productId);
         ApiResult apiResult = mapResult.map(ratingResponse, "Create rating successfully");
         return new ResponseEntity<>(apiResult, HttpStatus.CREATED);

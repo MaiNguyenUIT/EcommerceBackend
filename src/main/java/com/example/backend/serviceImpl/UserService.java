@@ -7,6 +7,7 @@ import com.example.backend.model.User;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.DTO.request.ChangePasswordRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +25,8 @@ public class UserService implements com.example.backend.service.UserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User findUserByJwtToken(String jwt) throws Exception {
-        String username = jwtProvider.getUserNameFromJwtToken(jwt);
+    public User findUserByJwtToken() throws Exception {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = findUserByEmail(username);
         return user;
     }
